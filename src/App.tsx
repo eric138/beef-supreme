@@ -8,7 +8,6 @@ const App = () => {
   const [currentView, setCurrentView] = useState<string>('POKE_HOME');
   const [viewComponent, setViewComponent] = useState<React.ReactElement | null>(null);
 
-  // if currentView is changed, log the new value to the console
   useEffect(() => {
     switch (currentView) {
       case 'POKE_SEARCH':
