@@ -9,12 +9,41 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '@mui/material/styles';
 
-const Header = () => {
+const Header = ({ setView }: { setView: (view: string) => void }) => {
   const theme = useTheme();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  const handleMenuToggle = () => {
+  const handleMenuToggle = (): void => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleMenuItemSelection = (view: string): void => {
+    handleMenuToggle();
+    setView(view);
+  };
+
+  const generateMenuItems = () => {
+    const menuItems = [
+      { label: 'Poké Home', view: 'POKE_HOME' },
+      { label: 'Poké Search', view: 'POKE_SEARCH' },
+    ];
+    return menuItems.map((item, index) => (
+      <MenuItem
+        key={index}
+        onClick={() => handleMenuItemSelection(item.view)}
+        sx={{
+          backgroundColor: theme.palette.primary.main,
+          color: 'white',
+          '&:hover': {
+            color: 'gray',
+            backgroundColor: theme.palette.primary.main
+          },
+          marginBottom: index !== menuItems.length - 1 ? '8px' : '0px'
+        }}
+      >
+        {item.label}
+      </MenuItem>
+    ));
   };
 
   return (
@@ -32,7 +61,7 @@ const Header = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} onClick={() => setView('POKE_HOME')}>
             PokéProjects
           </Typography>
         </Toolbar>
@@ -40,16 +69,9 @@ const Header = () => {
       <Menu
         open={isMenuOpen}
         onClose={handleMenuToggle}
+        anchorEl={document.getElementById('menu-button')}
       >
-        <MenuItem
-          onClick={handleMenuToggle}
-          sx={{
-            backgroundColor: theme.palette.primary.main,
-            color: 'white',
-            '&:hover': {
-              color: 'gray',
-              backgroundColor: theme.palette.primary.main}
-          }}>Poké Search</MenuItem>
+        {generateMenuItems()}
       </Menu>
     </Box>
   )
